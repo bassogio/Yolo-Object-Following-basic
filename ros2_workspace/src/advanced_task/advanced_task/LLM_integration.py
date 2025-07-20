@@ -22,7 +22,7 @@ class YOLONode(Node):
         self.declare_parameter('publisher_meta_topic',             '/detections')
         self.declare_parameter('camera_index', 0)
         self.declare_parameter('publish_rate', 30.0)
-        self.declare_parameter('target_class', 'bottle')
+        self.declare_parameter('target_class', 'person')
         self.declare_parameter('target_id',    '/selected_target_id')
 
         self.raw_topic        = self.get_parameter('publisher_raw_topic').value
