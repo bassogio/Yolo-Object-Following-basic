@@ -121,7 +121,8 @@ ros2 topic pub /target_class std_msgs/String "data: 'bowl'"
 - `/camera/image_raw`: Raw RGB images (sensor_msgs/Image)
 - `/camera/detected_target`: Annotated images with YOLO detections (sensor_msgs/Image)
 - `/detections`: Detection metadata as JSON (std_msgs/String)
-- `/robotAction`: Moving direction for robot (std_msgs/String)
+- `/robotAction`: Moving direction for robot (std_msgs/String)  
+  **Note:** The moving direction is intended for robot control. For humans, "up" means you need to go down, and "down" means you need to go up.
 
 ---
 
