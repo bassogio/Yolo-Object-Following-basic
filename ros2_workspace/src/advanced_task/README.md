@@ -116,6 +116,10 @@ ros2 topic pub -1 /target_class std_msgs/String "data: 'bowl'"
 ```
 - The node will immediately start detecting and annotating the new class.
 
+
+https://github.com/user-attachments/assets/ffc8d6e7-f165-4394-ad4e-74a5a235f463
+
+
 ---
 
 ### Select a Specific Target Instance
@@ -127,6 +131,13 @@ ros2 topic pub -1 /selected_target_id std_msgs/String "data: '1'"
 ```
 - The ID corresponds to the label shown in the annotated image (e.g., "bottle #1").
 - If only one target is detected, selection is reset and the node will wait for a new selection when multiple targets appear again.
+
+
+https://github.com/user-attachments/assets/f2b2337b-041d-49c0-8768-fa8f78494931
+
+
+https://github.com/user-attachments/assets/73ea6ce2-731a-4dfb-98f5-560d70480b23
+
 
 ---
 
