@@ -53,7 +53,8 @@ source install/setup.bash
 1. Open a terminal, navigate to your workspace root and run:
 
 ```bash
-cd ros2_workspace/src/advanced_task/advanced_task/detect_cameras.py
+cd ros2_workspace/src/advanced_task/advanced_task/
+python3 detect_cameras.py
 ```
 This script will list all the connected camera indexes.
 
@@ -114,3 +115,10 @@ Example output:
 ```bash
 [INFO] [hardware_data_sub_node]: Received: 'CPU Load: 18.7%'
 ```
+
+
+
+
+
+
+ros2 topic pub /target_class std_msgs/String "data: 'bowl'"

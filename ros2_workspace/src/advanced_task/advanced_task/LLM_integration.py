@@ -18,7 +18,7 @@ class DynamicYOLONode(Node):
         # ----------------------------
         self.declare_parameter('publisher_raw_topic',              '/camera/image_raw')
         self.declare_parameter('publisher_detected_topic',         '/camera/detected_target')
-        self.declare_parameter('publisher_moving_direction_topic', '/action/moving_direction')
+        self.declare_parameter('publisher_moving_direction_topic', '/robotAction')
         self.declare_parameter('publisher_meta_topic',             '/detections')
         self.declare_parameter('camera_index', 0)
         self.declare_parameter('publish_rate', 30.0)
@@ -174,9 +174,9 @@ class DynamicYOLONode(Node):
             return "Stay still"
         elif abs(dx) <= tolerance:
             if dy < -tolerance:
-                return "Move down"
-            elif dy > tolerance:
                 return "Move up"
+            elif dy > tolerance:
+                return "Move down"
         elif abs(dy) <= tolerance:
             if dx < -tolerance:
                 return "Move left"
@@ -184,13 +184,13 @@ class DynamicYOLONode(Node):
                 return "Move right"
         else:
             if dx < -tolerance and dy < -tolerance:
-                return "Move down and left"
-            elif dx < -tolerance and dy > tolerance:
                 return "Move up and left"
+            elif dx < -tolerance and dy > tolerance:
+                return "Move down and left"
             elif dx > tolerance and dy < -tolerance:
-                return "Move down and right"
-            elif dx > tolerance and dy > tolerance:
                 return "Move up and right"
+            elif dx > tolerance and dy > tolerance:
+                return "Move down and right"
         return "Unknown direction"
 
 def main(args=None):
