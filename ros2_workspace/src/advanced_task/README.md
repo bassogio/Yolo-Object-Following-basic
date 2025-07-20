@@ -2,7 +2,7 @@
 
 ## Overview
 
-This ROS 2 package streams camera images and performs real-time object detection using YOLOv8.  
+This ROS 2 package streams camera images and performs real-time object detection using yolo11n.  
 You can choose to run either the **rgb_publisher** node (for raw RGB images) or the **llm_integration** node (for annotated images and detection metadata).
 
 ---
@@ -10,7 +10,7 @@ You can choose to run either the **rgb_publisher** node (for raw RGB images) or 
 ## Package Contents
 
 - `RGB_publisher.py`: Publishes raw RGB images from a selected camera.
-- `LLM_integration.py`: Publishes annotated images with YOLOv8 detections, detection metadata, and moving direction.
+- `LLM_integration.py`: Publishes annotated images with yolo11n detections, detection metadata, and moving direction.
 - `detect_cameras.py`: Utility script to list available camera indices and names.
 
 ---
@@ -21,7 +21,7 @@ You can choose to run either the **rgb_publisher** node (for raw RGB images) or 
 - Python 3.8+
 - OpenCV
 - cv_bridge
-- ultralytics (YOLOv8)
+- ultralytics (yolo11n)
 - torch
 
 Install dependencies:
@@ -98,7 +98,7 @@ Override parameters if needed:
 ros2 run advanced_task rgb_publisher --ros-args -p camera_index:=2 -p publish_rate:=5
 ```
 
-### To see RGB image with LLM (YOLOv8) detection:
+### To see RGB image with LLM (yolo11n) detection:
 ```bash
 ros2 run advanced_task llm_integration
 ```
