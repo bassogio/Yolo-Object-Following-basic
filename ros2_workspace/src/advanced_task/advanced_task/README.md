@@ -11,24 +11,30 @@ The **subscriber node** listens on `/myHWtopic` and prints every message it rece
 
 ## Package Contents
 
-- **hardware_data_pub**: Publisher node
-- **hardware_data_sub**: Subscriber node
+- **rgb_publisher**:   Publisher node for RGB image
+- **llm_integration**: Publisher node for RGB image with LLM integration
 
 ---
 
 ## Parameters
 
-### Publisher node
-| Name               | Default    | Description                                  |
-| ------------------ | ---------- | -------------------------------------------- |
-| `publisher_topic`  | myHWtopic  | Topic to publish CPU load to                 |
-| `sampling_rate`    | 1.0        | Rate in Hz to read CPU load (R1)             |
-| `publish_rate`     | 0.5        | Rate in Hz to publish data on ROS topic (R2) |
+### rgb_publisher - Publisher node
+| Name               | Default            | Description                             |
+| ------------------ | ------------------ | --------------------------------------- |
+| `publisher_topic`  | /camera/image_raw  | Topic to publish RGB image              |
+| `camera_index`     | 0                  | The index of the camera                 |
+| `publish_rate`     | 10                 | Rate in Hz to publish data on ROS topic |
 
-### Subscriber node
-| Name                | Default    | Description                               |
-| ------------------- | ---------- | ----------------------------------------- |
-| `subscriber_topic`  | myHWtopic  | Topic to subscribe and print data         |
+### llm_integration - Publisher node
+| Name                       | Default                | Description                                     |
+| -------------------------- | ---------------------- | ----------------------------------------------- |
+| `publisher_raw_topic`      | /camera/image_raw      | Topic to publish RGB image                      |
+| `publisher_detected_topic` | /camera/image_detected | Topic to publish RGB image with LLM integration |
+| 'camera_index'             | 0                      | The index of the camera.                        |
+| `publish_rate`             | 10                     | Rate in Hz to publish data on ROS topic         |
+| 'target_class'             | person                 | The Class to detect                             |
+
+
 
 ---
 
@@ -85,6 +91,3 @@ Example output:
 ```bash
 [INFO] [hardware_data_sub_node]: Received: 'CPU Load: 18.7%'
 ```
-
-
-[watch the video]
