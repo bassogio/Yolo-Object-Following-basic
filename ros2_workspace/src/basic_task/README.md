@@ -34,7 +34,7 @@ The **subscriber node** listens on `/myHWtopic` and prints every message it rece
 
 ## How to Build
 
-Navigate to your workspace root:
+Open a terminal, navigate to your workspace root and run:
 
 ```bash
 colcon build

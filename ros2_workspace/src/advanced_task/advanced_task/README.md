@@ -30,17 +30,15 @@ The **subscriber node** listens on `/myHWtopic` and prints every message it rece
 | -------------------------- | ---------------------- | ----------------------------------------------- |
 | `publisher_raw_topic`      | /camera/image_raw      | Topic to publish RGB image                      |
 | `publisher_detected_topic` | /camera/image_detected | Topic to publish RGB image with LLM integration |
-| 'camera_index'             | 0                      | The index of the camera.                        |
+| `camera_index`             | 0                      | The index of the camera.                        |
 | `publish_rate`             | 10                     | Rate in Hz to publish data on ROS topic         |
-| 'target_class'             | person                 | The Class to detect                             |
-
-
+| `target_class`             | person                 | The Class to detect                             |
 
 ---
 
 ## How to Build
 
-Navigate to your workspace root:
+Open a terminal, navigate to your workspace root and run:
 
 ```bash
 colcon build
@@ -50,6 +48,31 @@ source install/setup.bash
 ---
 
 ## How to Run
+
+**Not sure which camera index to use? Follow this steps**
+1. Open a terminal, navigate to your workspace root and run:
+
+```bash
+cd ros2_workspace/src/advanced_task/advanced_task/detect_cameras.py
+```
+This script will list all the connected camera indexes.
+
+Example output:
+
+```bash
+Available cameras:
+  Index 0: C922 Pro Stream Webcam
+  Index 2: Microsoft® LifeCam HD-3000: Mi
+```
+2. If your desired camera is not at Index 0, update the value of camera_index in the script to the correct index.
+
+
+
+
+
+
+
+
 
 Open **two separate terminals**:
 
