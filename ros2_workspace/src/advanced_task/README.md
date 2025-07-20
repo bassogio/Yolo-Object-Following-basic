@@ -118,7 +118,7 @@ ros2 topic pub -1 /target_class std_msgs/String "data: 'bowl'"
 
 The video below demonstrates how executing the following command results in the system updating the target to the bowl.
 
-https://github.com/user-attachments/assets/ffc8d6e7-f165-4394-ad4e-74a5a235f463
+***https://github.com/user-attachments/assets/ffc8d6e7-f165-4394-ad4e-74a5a235f463***
 
 
 ---
@@ -136,11 +136,11 @@ ros2 topic pub -1 /selected_target_id std_msgs/String "data: '1'"
 The video below demonstrates how the "Moving Direction" is dynamically updated based on the selected object to track.
 It also shows the system’s handling of multiple recognized objects that belong to the same category.
 
-https://github.com/user-attachments/assets/f2b2337b-041d-49c0-8768-fa8f78494931
+***https://github.com/user-attachments/assets/f2b2337b-041d-49c0-8768-fa8f78494931***
 
 Here is another demonstration:
 
-https://github.com/user-attachments/assets/73ea6ce2-731a-4dfb-98f5-560d70480b23
+***https://github.com/user-attachments/assets/73ea6ce2-731a-4dfb-98f5-560d70480b23***
 
 
 ---
