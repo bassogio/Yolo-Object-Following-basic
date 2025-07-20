@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'rgb_publisher   = advanced_task.RGB_publisher:main',
-            'llm_integration = advanced_task.LLM_integration_publisher:main',
+            'llm_integration = advanced_task.LLM_integration:main',
         ],
     },
 )
