@@ -2,37 +2,55 @@
 
 ## Overview
 
-This is a simple ROS 2 package that demonstrates a Talker/Listener setup.
-
-The **publisher node** reads your laptop's CPU load (using `psutil`) at a sampling rate (R1) and publishes it to the `/myHWtopic` at a publish rate (R2).  
-The **subscriber node** listens on `/myHWtopic` and prints every message it receives to the console.
+This ROS 2 package streams camera images and performs real-time object detection using YOLOv8.  
+You can choose to run either the **rgb_publisher** node (for raw RGB images) or the **llm_integration** node (for annotated images and detection metadata).
 
 ---
 
 ## Package Contents
 
-- **rgb_publisher**:   Publisher node for RGB image
-- **llm_integration**: Publisher node for RGB image with LLM integration
+- `RGB_publisher.py`: Publishes raw RGB images from a selected camera.
+- `LLM_integration.py`: Publishes annotated images with YOLOv8 detections, detection metadata, and moving direction.
+- `detect_cameras.py`: Utility script to list available camera indices and names.
+
+---
+
+## Requirements
+
+- ROS2 
+- Python 3.8+
+- OpenCV
+- cv_bridge
+- ultralytics (YOLOv8)
+- torch
+
+Install dependencies:
+```bash
+pip install opencv-python ultralytics torch
+sudo apt install ros-<distro>-cv-bridge
+```
 
 ---
 
 ## Parameters
 
-### rgb_publisher - Publisher node
+### rgb_publisher (RGB_publisher.py)
 | Name               | Default            | Description                             |
 | ------------------ | ------------------ | --------------------------------------- |
 | `publisher_topic`  | /camera/image_raw  | Topic to publish RGB image              |
 | `camera_index`     | 0                  | The index of the camera                 |
 | `publish_rate`     | 10                 | Rate in Hz to publish data on ROS topic |
 
-### llm_integration - Publisher node
+### llm_integration (LLM_integration.py)
 | Name                       | Default                | Description                                     |
 | -------------------------- | ---------------------- | ----------------------------------------------- |
-| `publisher_raw_topic`      | /camera/image_raw      | Topic to publish RGB image                      |
-| `publisher_detected_topic` | /camera/image_detected | Topic to publish RGB image with LLM integration |
-| `camera_index`             | 0                      | The index of the camera.                        |
-| `publish_rate`             | 10                     | Rate in Hz to publish data on ROS topic         |
-| `target_class`             | person                 | The Class to detect                             |
+| `publisher_raw_topic`      | /camera/image_raw      | Topic to publish raw RGB image                  |
+| `publisher_detected_topic` | /camera/detected_target| Topic to publish annotated image with detection |
+| `publisher_moving_direction_topic` | /robotAction   | Topic to publish moving direction commands      |
+| `publisher_meta_topic`     | /detections            | Topic to publish detection metadata (JSON)      |
+| `camera_index`             | 0                      | The index of the camera                         |
+| `publish_rate`             | 30                     | Rate in Hz to publish data on ROS topic         |
+| `target_class`             | person                 | The class to detect (can be updated dynamically)|
 
 ---
 
@@ -47,78 +65,68 @@ source install/setup.bash
 
 ---
 
-## How to Run
+## Camera Selection
 
-**Not sure which camera index to use? Follow this steps**
-1. Open a terminal, navigate to your workspace root and run:
+If you are unsure which camera index to use, run:
 
 ```bash
 cd ros2_workspace/src/advanced_task/advanced_task/
 python3 detect_cameras.py
 ```
-This script will list all the connected camera indexes.
 
+This will list all connected cameras and their indices.  
 Example output:
-
 ```bash
 Available cameras:
   Index 0: C922 Pro Stream Webcam
   Index 2: Microsoft® LifeCam HD-3000: Mi
 ```
-2. If your desired camera is not at Index 0, update the value of camera_index in the script to the correct index.
+Update the `camera_index` parameter in your launch or run command as needed.
 
+---
 
+## How to Run
 
+Choose **one** of the following nodes to run:
 
-
-
-
-
-
-Open **two separate terminals**:
-
-###  Terminal 1 - Run the Publisher Node
-
-This node samples your CPU load at `sampling_rate` (R1) and publishes to `/myHWtopic` at `publish_rate` (R2):
-
+### To see only the raw RGB image:
 ```bash
-ros2 run basic_task hardware_data_pub
+ros2 run advanced_task RGB_publisher
+```
+Override parameters if needed:
+```bash
+ros2 run advanced_task RGB_publisher --ros-args -p camera_index:=2 -p publish_rate:=5
 ```
 
-You can also override parameters using:
-
+### To see RGB image with LLM (YOLOv8) detection:
 ```bash
-ros2 run basic_task hardware_data_pub --ros-args -p sampling_rate:=2.0 -p publish_rate:=1.0
+ros2 run advanced_task LLM_integration
+```
+Override parameters if needed:
+```bash
+ros2 run advanced_task LLM_integration --ros-args -p target_class:=bowl
 ```
 
-Example output:
+#### Dynamically Change Target Class
 
+You can update the target class at runtime by publishing to `/target_class`:
 ```bash
-[INFO] [hardware_data_pub_node]: Published: 'CPU Load: 18.7%'
-```
-
-###  Terminal 2 - Run the Subscriber Node
-**NOTE: In the second terminal you should also run**
-
-```bash
-source install/setup.bash
-```
-
-This node listens on /myHWtopic and prints received messages to stdout:
-
-```bash
-ros2 run basic_task hardware_data_sub
-```
-
-Example output:
-
-```bash
-[INFO] [hardware_data_sub_node]: Received: 'CPU Load: 18.7%'
-```
-
-
-
-
-
-
 ros2 topic pub /target_class std_msgs/String "data: 'bowl'"
+```
+
+---
+
+## Topics Published
+
+- `/camera/image_raw`: Raw RGB images (sensor_msgs/Image)
+- `/camera/detected_target`: Annotated images with YOLO detections (sensor_msgs/Image)
+- `/detections`: Detection metadata as JSON (std_msgs/String)
+- `/robotAction`: Moving direction for robot (std_msgs/String)
+
+---
+
+## Troubleshooting
+
+- If you see "Could not open camera", check your camera index and permissions.
+---
+
