@@ -91,20 +91,20 @@ Choose **one** of the following nodes to run:
 
 ### To see only the raw RGB image:
 ```bash
-ros2 run advanced_task RGB_publisher
+ros2 run advanced_task rgb_publisher
 ```
 Override parameters if needed:
 ```bash
-ros2 run advanced_task RGB_publisher --ros-args -p camera_index:=2 -p publish_rate:=5
+ros2 run advanced_task rgb_publisher --ros-args -p camera_index:=2 -p publish_rate:=5
 ```
 
 ### To see RGB image with LLM (YOLOv8) detection:
 ```bash
-ros2 run advanced_task LLM_integration
+ros2 run advanced_task llm_integration
 ```
 Override parameters if needed:
 ```bash
-ros2 run advanced_task LLM_integration --ros-args -p target_class:=bowl
+ros2 run advanced_task llm_integration --ros-args -p target_class:=bowl
 ```
 
 #### Dynamically Change Target Class
