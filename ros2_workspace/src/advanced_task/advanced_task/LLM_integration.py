@@ -9,9 +9,9 @@ import json
 import torch
 from ultralytics import YOLO
 
-class DynamicYOLONode(Node):
+class YOLONode(Node):
     def __init__(self):
-        super().__init__('dynamic_yolo_node')
+        super().__init__('yolo_node')
 
         # ----------------------------
         # ROS2 parameters 
@@ -22,7 +22,8 @@ class DynamicYOLONode(Node):
         self.declare_parameter('publisher_meta_topic',             '/detections')
         self.declare_parameter('camera_index', 0)
         self.declare_parameter('publish_rate', 30.0)
-        self.declare_parameter('target_class', 'person')
+        self.declare_parameter('target_class', 'bottle')
+        self.declare_parameter('target_id',    '/selected_target_id')
 
         self.raw_topic        = self.get_parameter('publisher_raw_topic').value
         self.detected_topic   = self.get_parameter('publisher_detected_topic').value
@@ -31,6 +32,7 @@ class DynamicYOLONode(Node):
         self.camera_index     = self.get_parameter('camera_index').value
         self.publish_rate     = self.get_parameter('publish_rate').value
         self.target_class     = self.get_parameter('target_class').value.strip().lower()
+        self.target_id        = self.get_parameter('target_id').value
 
         self.get_logger().info(f"Starting with target_class='{self.target_class}'")
         self.get_logger().info(f"Raw images: {self.raw_topic}")
@@ -43,19 +45,24 @@ class DynamicYOLONode(Node):
         self.bridge = CvBridge()
         self.raw_pub        = self.create_publisher(Image,  self.raw_topic,        10)
         self.detected_pub   = self.create_publisher(Image,  self.detected_topic,   10)
-        self.meta_pub       = self.create_publisher(String, self.meta_topic,  10)
+        self.meta_pub       = self.create_publisher(String, self.meta_topic,       10)
         self.moving_dir_pub = self.create_publisher(String, self.moving_dir_topic, 10)
 
         # listen for dynamic target updates
         self.create_subscription(String, '/target_class', self.target_callback, 10)
-        self.get_logger().info("Subscribed to /target_class for updates")
+        self.get_logger().info(f"Subscribed to {self.target_class} for updates")
+
+        # listen for user selection of target id
+        self.selected_target_id = None
+        self.create_subscription(String, self.target_id, self.selection_callback, 10)
+        self.get_logger().info(f"Subscribed to {self.target_id} for user selection")
 
         # ----------------------------
         # Prepare YOLO on GPU if possible
         # ----------------------------
         self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
         self.get_logger().info(f"Using device: {self.device}")
-        self.model = YOLO('yolov8n.pt')
+        self.model = YOLO('yolo11n.pt')
         self.model.to(self.device)
 
         # ----------------------------
@@ -83,6 +90,14 @@ class DynamicYOLONode(Node):
             self.target_class = new
             self.get_logger().info(f"Updated target_class: '{self.target_class}'")
 
+    def selection_callback(self, msg: String):
+        """Callback to update selected target id from user."""
+        try:
+            self.selected_target_id = int(msg.data)
+            self.get_logger().info(f"User selected target id: {self.selected_target_id}")
+        except ValueError:
+            self.get_logger().warn("Invalid target id received.")
+
     def publish_image(self):
         """Capture image, run YOLO inference, and publish results."""
         ret, frame = self.cap.read()
@@ -107,6 +122,8 @@ class DynamicYOLONode(Node):
         # Draw boxes & collect metadata
         annotated = frame.copy() # Copy original frame for annotations
         detections = []          # List to hold detection metadata
+        target_index = 0         # Counter for target class instances
+
         for box in results[0].boxes: 
             cls_id     = int(box.cls[0])                    # Class ID
             name       = self.model.names[cls_id]           # Class name
@@ -115,21 +132,36 @@ class DynamicYOLONode(Node):
             midpoint = ((x1 + x2) // 2, (y1 + y2) // 2)     # Calculate midpoint
 
             if name.lower() == self.target_class:
+                target_index += 1
                 # draw
                 #                        top-left bottom-right color thickness   
                 cv2.rectangle(annotated, (x1, y1), (x2, y2), (0,255,0), 2)
                 #                     center  radius color    fill
                 cv2.circle(annotated, midpoint, 5, (0,0,255), -1)
-                label = f"{name} {conf:.2f}"
+                label = f"{name} #{target_index} {conf:.2f}"
                 cv2.putText(annotated, label, (x1, y1-5),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
                 detections.append({
+                    "id": target_index,
                     "class": name,
                     "confidence": conf,
                     "bbox": [x1, y1, x2, y2],
                     "midpoint": midpoint
                 })
-                direction = self.moving_direction(annotated, detections[0]['midpoint'])
+
+        if len(detections) == 1:
+            if self.selected_target_id is not None:
+                self.selected_target_id = None # Reset selection if only one target detected
+            direction = self.moving_direction(annotated, detections[0]['midpoint'])
+        elif len(detections) > 1:
+            # Wait for user selection
+            selected = next((d for d in detections if d['id'] == self.selected_target_id), None)
+            if selected:
+                direction = self.moving_direction(annotated, selected['midpoint'])
+            else:
+                direction = "Wait for user selection"
+        else:
+            direction = "No target detected"
 
         # Publish annotated frame
         ann_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)              # Convert back to RGB for ROS
@@ -195,7 +227,7 @@ class DynamicYOLONode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = DynamicYOLONode()
+    node = YOLONode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

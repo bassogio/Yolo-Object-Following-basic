@@ -109,25 +109,48 @@ ros2 run advanced_task LLM_integration --ros-args -p target_class:=bowl
 
 #### Dynamically Change Target Class
 
-You can update the target class at runtime by publishing to `/target_class`:
+You can update the target class (e.g., from "bottle" to "bowl") at runtime by publishing to `/target_class`:
+
 ```bash
-ros2 topic pub /target_class std_msgs/String "data: 'bowl'"
+ros2 topic pub -1 /target_class std_msgs/String "data: 'bowl'"
 ```
+- The node will immediately start detecting and annotating the new class.
 
 ---
 
-## Topics Published
+### Select a Specific Target Instance
 
-- `/camera/image_raw`: Raw RGB images (sensor_msgs/Image)
-- `/camera/detected_target`: Annotated images with YOLO detections (sensor_msgs/Image)
-- `/detections`: Detection metadata as JSON (std_msgs/String)
-- `/robotAction`: Moving direction for robot (std_msgs/String)  
-  **Note:** The moving direction is intended for robot control. For humans, "up" means you need to go down, and "down" means you need to go up.
+If multiple objects of the target class are detected, you can select which one to follow by publishing its ID to `/selected_target_id`:
+
+```bash
+ros2 topic pub -1 /selected_target_id std_msgs/String "data: '1'"
+```
+- The ID corresponds to the label shown in the annotated image (e.g., "bottle #1").
+- If only one target is detected, selection is reset and the node will wait for a new selection when multiple targets appear again.
+
+---
+
+## Topics Published & Subscribed
+
+**Published:**
+- `/camera/image_raw`: Raw RGB images (`sensor_msgs/Image`)
+- `/camera/detected_target`: Annotated images with YOLO detections (`sensor_msgs/Image`)
+- `/detections`: Detection metadata as JSON (`std_msgs/String`)
+- `/robotAction`: Moving direction for robot (`std_msgs/String`)
+
+**Subscribed:**
+- `/target_class`: Dynamically update which class to detect (`std_msgs/String`)
+- `/selected_target_id`: Select which detected instance to follow (`std_msgs/String`)
+
+---
+
+**Note:**  
+- Use the `-1` flag with `ros2 topic pub` to publish only once.
+- Make sure your node is running and subscribing to these topics before publishing.
 
 ---
 
 ## Troubleshooting
 
 - If you see "Could not open camera", check your camera index and permissions.
----
 
