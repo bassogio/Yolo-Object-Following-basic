@@ -7,34 +7,35 @@ Built using [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics) and
 
 ## Project Structure
 
-ros2_workspace/
-├── src/
-│   ├── [basic_task](src/basic_task)                     # CPU monitoring publisher & subscriber
-│   │   ├── [basic_task](src/basic_task/basic_task)/
-│   │   │   ├── [__init__.py](src/basic_task/basic_task/__init__.py)
-│   │   │   ├── [hardware_data_pub.py](src/basic_task/basic_task/hardware_data_pub.py)
-│   │   │   └── [hardware_data_sub.py](src/basic_task/basic_task/hardware_data_sub.py)
-│   │   ├── [resource/](src/basic_task/resource/)
-│   │   ├── [README.md](src/basic_task/README.md)
-│   │   ├── [package.xml](src/basic_task/package.xml)
-│   │   ├── [running_example.mp4](src/basic_task/running_example.mp4)
-│   │   ├── [setup.cfg](src/basic_task/setup.cfg)
-│   │   └── [setup.py](src/basic_task/setup.py)
-│   └── [advanced_task](src/advanced_task)               # YOLO-based object detection & movement logic
-│       ├── [advanced_task](src/advanced_task/advanced_task)/
-│       │   ├── [LLM_integration.py](src/advanced_task/advanced_task/LLM_integration.py)
-│       │   ├── [RGB_publisher.py](src/advanced_task/advanced_task/RGB_publisher.py)
-│       │   ├── [hardware_data_sub.py](src/advanced_task/advanced_task/hardware_data_sub.py)
-│       │   └── [detect_cameras.py](src/advanced_task/advanced_task/detect_cameras.py)
-│       ├── [resource/](src/advanced_task/resource/)
-│       ├── [Multiple_Detections.mp4](src/advanced_task/Multiple_Detections.mp4)
-│       ├── [Multiple_Detections_2.mp4](src/advanced_task/Multiple_Detections_2.mp4)
-│       ├── [README.md](src/advanced_task/README.md)
-│       ├── [package.xml](src/advanced_task/package.xml)
-│       ├── [running_example.mp4](src/advanced_task/running_example.mp4)
-│       ├── [setup.cfg](src/advanced_task/setup.cfg)
-│       ├── [setup.py](src/advanced_task/setup.py)
-│       └── [target_change.mp4](src/advanced_task/target_change.mp4)
+- [ros2_workspace](./ros2_workspace)
+  - [src](./ros2_workspace/src)
+    - [basic_task](./ros2_workspace/src/basic_task) - CPU monitoring publisher & subscriber
+      - [basic_task](./ros2_workspace/src/basic_task/basic_task)
+        - [__init__.py](./ros2_workspace/src/basic_task/basic_task/__init__.py)
+        - [hardware_data_pub.py](./ros2_workspace/src/basic_task/basic_task/hardware_data_pub.py)
+        - [hardware_data_sub.py](./ros2_workspace/src/basic_task/basic_task/hardware_data_sub.py)
+      - [resource](./ros2_workspace/src/basic_task/resource)
+      - [README.md](./ros2_workspace/src/basic_task/README.md)
+      - [package.xml](./ros2_workspace/src/basic_task/package.xml)
+      - [running_example.mp4](./ros2_workspace/src/basic_task/running_example.mp4)
+      - [setup.cfg](./ros2_workspace/src/basic_task/setup.cfg)
+      - [setup.py](./ros2_workspace/src/basic_task/setup.py)
+    - [advanced_task](./ros2_workspace/src/advanced_task) - YOLO-based object detection & movement logic
+      - [advanced_task](./ros2_workspace/src/advanced_task/advanced_task)
+        - [LLM_integration.py](./ros2_workspace/src/advanced_task/advanced_task/LLM_integration.py)
+        - [RGB_publisher.py](./ros2_workspace/src/advanced_task/advanced_task/RGB_publisher.py)
+        - [hardware_data_sub.py](./ros2_workspace/src/advanced_task/advanced_task/hardware_data_sub.py)
+        - [detect_cameras.py](./ros2_workspace/src/advanced_task/advanced_task/detect_cameras.py)
+      - [resource](./ros2_workspace/src/advanced_task/resource)
+      - [Multiple_Detections.mp4](./ros2_workspace/src/advanced_task/Multiple_Detections.mp4)
+      - [Multiple_Detections_2.mp4](./ros2_workspace/src/advanced_task/Multiple_Detections_2.mp4)
+      - [README.md](./ros2_workspace/src/advanced_task/README.md)
+      - [package.xml](./ros2_workspace/src/advanced_task/package.xml)
+      - [running_example.mp4](./ros2_workspace/src/advanced_task/running_example.mp4)
+      - [setup.cfg](./ros2_workspace/src/advanced_task/setup.cfg)
+      - [setup.py](./ros2_workspace/src/advanced_task/setup.py)
+      - [target_change.mp4](./ros2_workspace/src/advanced_task/target_change.mp4)
+
 
 ---
 
